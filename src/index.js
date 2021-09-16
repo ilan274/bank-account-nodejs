@@ -35,5 +35,22 @@ app.get('/statement', verifyIfExistsAccountCpf, (request, response) => {
   return response.json(customer.statement);
 });
 
+app.post('/deposit', verifyIfExistsAccountCpf, (request, response) => {
+  const { description, amount } = request.body;
+
+  const { customer } = request;
+
+  const statementOperation = {
+    description,
+    amount,
+    created_at: new Date(),
+    type: 'credit',
+  };
+
+  customer.statement.push(statementOperation);
+
+  return response.status(201).send();
+});
+
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => console.log(`Started at port ${PORT}`));
