@@ -1,10 +1,12 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
 
+const verifyIfExistsAccountCpf = require('./middlewares/verifyIfExistsAccountCpf');
+
 const app = express();
 app.use(express.json());
 
-const customers = [];
+const customers = require('./config/database');
 
 app.post('/account', (request, response) => {
   const { cpf, name } = request.body;
@@ -25,6 +27,12 @@ app.post('/account', (request, response) => {
   });
 
   return response.status(201).send();
+});
+
+app.get('/statement', verifyIfExistsAccountCpf, (request, response) => {
+  const { customer } = request;
+
+  return response.json(customer.statement);
 });
 
 const PORT = process.env.PORT || 3333;
