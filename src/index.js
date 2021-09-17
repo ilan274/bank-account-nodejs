@@ -8,6 +8,7 @@ app.use(express.json());
 
 const customers = require('./config/database');
 const getBalance = require('./utils/getBalance');
+const { findIndex } = require('./config/database');
 
 app.post('/account', (request, response) => {
   const { cpf, name } = request.body;
@@ -99,6 +100,15 @@ app.get('/account', verifyIfExistsAccountCpf, (request, response) => {
   const { customer } = request;
 
   return response.status(201).json(customer);
+});
+
+app.delete('/account/delete', verifyIfExistsAccountCpf, (request, response) => {
+  const { customer } = request;
+
+  const findCustomer = customers.findIndex((cust) => cust.cpf === customer.cpf);
+  customers.splice(findCustomer, 1);
+
+  return response.status(200).json(customers);
 });
 
 const PORT = process.env.PORT || 3333;
