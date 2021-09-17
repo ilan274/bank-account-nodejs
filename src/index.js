@@ -87,5 +87,19 @@ app.post('/withdraw', verifyIfExistsAccountCpf, (request, response) => {
   return response.status(201).send();
 });
 
+app.put('/account', verifyIfExistsAccountCpf, (request, response) => {
+  const { name } = request.body;
+  const { customer } = request;
+
+  customer.name = name;
+  return response.status(201).json(customer);
+});
+
+app.get('/account', verifyIfExistsAccountCpf, (request, response) => {
+  const { customer } = request;
+
+  return response.status(201).json(customer);
+});
+
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => console.log(`Started at port ${PORT}`));
